@@ -1,0 +1,9 @@
+body {
+  background-color: #fff;
+}
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  background-color: green;
+  font-weight: 700;
+}
