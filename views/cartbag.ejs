@@ -1,0 +1,19 @@
+<%- include("login-partials/header") %>
+<p><%=message %></p>
+<% items.forEach(function(data){ %>
+    <div class="alert alert-primary" role="alert">
+  <ul class="list-group list-group-horizontal">
+  <li class="list-group-item"> 
+       <img  src="http://localhost:3000/images/<%=data.image%>"class="product-images" alt="image here">
+       <h4>data.FRUIT_NAME</h4>
+       <h4>data.Last_name</h4>
+   </li>
+
+  <li class="list-group-item"><ul>
+      <li>data.QUANTITY</li>
+      <li>data.price</li>
+  </ul></li>
+</ul>
+</div>
+ <%}) %>
+<%-include("partials/footer") %>
