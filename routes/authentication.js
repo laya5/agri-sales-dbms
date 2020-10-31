@@ -1,9 +1,74 @@
 const express=require("express");
-const app =express.Router();
+const app=express.Router();
 const connection=require("../connections");
-var message =" ";
-const jwt=require("jsonwebtoken");
 const bcrypt=require("bcryptjs");
+require("dotenv").config();
+const message=" ";
+/* GET REQUESTS */
+app.get("/",function(req,res){
+    var ok=false;
+    if(req.session.userId){
+        ok=true;
+    }
+    console.log(ok + req.session.userId);
+    connection.query("select * from users_image",function(err,results){
+        if(err){
+            console.log(err);
+            res.render("main",{ok:ok,HOME:"Failed to load this page try after some time or check your internet connection",item:[]})
+        }
+        else{
+            console.log("here is your result");
+   res.render("main",{ok:ok,HOME:"THESE ARE OUR PRODUCTS",item:results})}
+        })
+});
+app.get("/register",function(req,res){
+    res.render("register",{MESSAGE:" "});
+});
+app.get("/login",function(req,res){
+res.render("login",{message:" "});
+});
+
+/* get REQUEST FOR WISHLIST ITEMS */
+app.get("/wishlist",function(req,res){
+    if(!req.session){
+        console.log("you need to login first");
+        return res.redirect("/login");
+    }
+    connection.query("SELECT * FROM wishlist where email=?",[req.session.userId],function(err,results){
+        if(err){
+            res.render("wishlist",{message:"sorry couldn't continue please got back to home",items:[]});
+        }
+        else{
+            if(results.length===0){
+                res.render("wishlist",{message:"YOUR WISHLIST IS EMPTY ADD SOME ITEMS",items:[]});
+            }
+            else{
+                res.render("wishlist",{message:" ",items:results})
+            }
+
+        }
+    })
+});
+/* get REQUEST FOR CART ITEMS */
+app.get("/cart",function(req,res){
+     const user = req.session.userId;
+     if(!req.session ){
+         return res.redirect("/login");
+     }
+    sql= "select * from users_image where email = '" +  user   + "'  AND ISADDEDTOCART= 1 ;" ;
+    connection.query(sql,function(err,results){
+        if(err){
+            console.log(err);
+            res.render("cartbag",{message:"there is an error while loading please try again later",items:[]})
+        }
+        else{
+            console.log("my results=" +results);
+   res.render("cartbag",{message:" ",items:results});}
+        })
+});
+ 
+
+/*POST REQUESTS */
 app.post("/register",function(req,res){
     const {firstName,LastName,email,password,mobilenumber}=req.body;
     connection.query("SELECT email from authentication where email =?",[email],  async (err,result)=>{
@@ -40,22 +105,21 @@ try{
     return  res.render("login",{message:"email or password is incorrect"});
     }
     else{
-       const  id=result[0].id;
-       const token = jwt.sign({id:id},process.env.JWT_SECRET,{
-           expiresIn:"90d"
-       });
-       console.log(token);
-       const cookieOptions={
-           expires:new Date(
-               Date.now() + (90 *24*60*60) 
-           ),
-           httpOnly:true
-       }
-       res.cookie('jwet',token,cookieOptions);
-       res.status(200).redirect("/page /main");
-    }
-
-}catch(err){
+        req.session.userId=email;
+        console.log(req.session);
+        connection.query("select * from users_image",function(err,results){
+        if(err){
+            console.log(err);
+            res.render("main",{ok:false,HOME:"Failed to load this page try after some time or check your internet connection",item:[]})
+        }
+        else{
+            console.log("here is your result");
+   res.render("main",{ok:true,HOME:"THESE ARE OUR PRODUCTS",item:results})}
+        });
+    }  
+        
+}
+catch(err){
     console.log(err);
 }
 })

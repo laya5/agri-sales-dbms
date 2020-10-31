@@ -1,3 +1,14 @@
-<%-include("partials/header") %>
-<h1>You Have succesfully loggedIn</h1>
+<%-include("login-partials/header") %>
+<p>home</p>
+ <% item.forEach(function(data){ %>
+        <div class="card  poster" style="width:18rem;">
+  <img   src="http://localhost:3000/images/<%=data.image%>"class="card-img-top product-images" alt="image here">
+  <div class="card-body">
+    <h5 class="card-title"><%=data.first_name%> (<%=data.last_name%>)</h5>
+    <p class="card-text"><%=data.price%></p>
+    <a href="/add_cart" class="btn btn-primary">ADD TO CART</a>
+    <a href="/add_wishlist" class="btn btn-primary">WISHLIST</a>
+  </div>
+</div>
+   <% }) %>
 <%-include("partials/footer") %>
