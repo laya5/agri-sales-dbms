@@ -28,45 +28,9 @@ app.get("/login",function(req,res){
 res.render("login",{message:" "});
 });
 
-/* get REQUEST FOR WISHLIST ITEMS */
-app.get("/wishlist",function(req,res){
-    if(!req.session){
-        console.log("you need to login first");
-        return res.redirect("/login");
-    }
-    connection.query("SELECT * FROM wishlist where email=?",[req.session.userId],function(err,results){
-        if(err){
-            res.render("wishlist",{message:"sorry couldn't continue please got back to home",items:[]});
-        }
-        else{
-            if(results.length===0){
-                res.render("wishlist",{message:"YOUR WISHLIST IS EMPTY ADD SOME ITEMS",items:[]});
-            }
-            else{
-                res.render("wishlist",{message:" ",items:results})
-            }
 
-        }
-    })
-});
-/* get REQUEST FOR CART ITEMS */
-app.get("/cart",function(req,res){
-     const user = req.session.userId;
-     if(!req.session ){
-         return res.redirect("/login");
-     }
-    sql= "select * from users_image where email = '" +  user   + "'  AND ISADDEDTOCART= 1 ;" ;
-    connection.query(sql,function(err,results){
-        if(err){
-            console.log(err);
-            res.render("cartbag",{message:"there is an error while loading please try again later",items:[]})
-        }
-        else{
-            console.log("my results=" +results);
-   res.render("cartbag",{message:" ",items:results});}
-        })
-});
- 
+
+
 
 /*POST REQUESTS */
 app.post("/register",function(req,res){

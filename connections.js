@@ -1,6 +1,6 @@
 const mysql=require('mysql');
 const express = require("express");
-const result = require('dotenv').config();
+ require('dotenv').config();
 var mysqlConnection =mysql.createConnection({
     host: process.env.MYSQL_HOST,
     port: process.env.MYSQL_PORT,

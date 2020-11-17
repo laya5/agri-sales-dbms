@@ -3,10 +3,11 @@ const app =express.Router();
 const connection=require("../connections");
 app.get("/:id",function(req,res){
     const id1=req.params.id;
-    var ok=false;
-    if(req.session){
-        ok=true;
+    var ok=true;
+    if(req.session.userId===undefined){
+        ok=false;
     }
+    
     const sql= "select * from users_image where itemtype LIKE '" + id1 +"%';" 
     console.log(sql);
     connection.query(sql,function(err,results){

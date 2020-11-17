@@ -7,14 +7,18 @@ const cookieParser=require("cookie-parser");
 const fileUpload =require("express-fileupload");
 const app=express();
 const pages=require("./routes/authentication");
-const profile=require("./routes/allProfile");
 const personals =require("./routes/allpersonals");
 const solditems =require("./routes/solditems");
 const categories=require("./routes/categories");
 const logout=require("./routes/logout");
+const loginType=require("./routes/logintype");
+const wishlist =require("./routes/wishlist");
+const checkout =require("./routes/checkout");
+const placeorder=require("./routes/placeorder");
 app.set('view engine','ejs');
 const session=require("express-session");
 const addingcart=require("./routes/addtocart");
+const brief=require("./routes/brief");
 const { unwatchFile } = require('fs');
 require("dotenv").config();
 const publicDirectory= path.join(__dirname,'./public');
@@ -36,13 +40,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(fileUpload());
 app.use("/",pages);
-app.use("/page",profile);
 app.use("/auth/pages",personals);
 app.get('/myitems',solditems);
-app.use("/add_cart",addingcart);
+app.use("/cart",addingcart);
 app.use("/categories",categories);
-app.use("/logout",logout)
-
+app.use("/logout",logout);
+app.use("/wishlist",wishlist);
+app.use("/brief",brief);
+app.use("/placeorder",checkout);
 app.listen(3000,function()
 {
     console.log("yeah listening");
